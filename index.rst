@@ -2,9 +2,10 @@ UEFI SBOM Best Practices
 ########################
 
 Authors:
- * `Richard Hughes <mailto:rhughes@redhat.com>`_ (Red Hat)
- * `Martin Fernandez <mailto:martin.fernandez@eclypsium.com>`_ (Eclypsium)
- * `Adam Williamson <mailto:awilliam@redhat.com>`_ (Red Hat)
+
+- `Richard Hughes <mailto:rhughes@redhat.com>`_ (Red Hat)
+- `Martin Fernandez <mailto:martin.fernandez@eclypsium.com>`_ (Eclypsium)
+- `Adam Williamson <mailto:awilliam@redhat.com>`_ (Red Hat)
 
 The purpose of this whitepaper post is to present a set of best practices for vendors of UEFI firmwares and their component elements, broadly agreed by the UEFI Software Bill of Materials (SBoM) Sub Team.
 This topic has also been introduced in a previous `Firmware SBoM Proposal <https://uefi.org/blog/firmware-sbom-proposal>`_ blog post.
@@ -21,19 +22,19 @@ The terms defined in this glossary may appear in italics as a reminder that they
 Readers may be expecting to see terms like “IBV” (Independent BIOS Vendor), “ODM” (Original Design Manufacturer), “IFV” (Independent Firmware Vendor) and “OEM” (Original Equipment Manufacturer), but this document mostly avoids those terms.
 This is because those entities may, at any given moment and in any given commercial arrangement, be acting as *component vendors*, *firmware vendors* or *platform vendors* in the context of this document.
 
-* **SBoM**: Software Bill of Materials.
+- **SBoM**: Software Bill of Materials.
   A formal document which can be used to articulate what components are contained within a binary deliverable, and who is responsible for each part.
-* **Component**: any identifiable, discrete element of a UEFI firmware, including but not limited to any item that can be removed from, replaced in or added to a UEFI file volume.
+- **Component**: any identifiable, discrete element of a UEFI firmware, including but not limited to any item that can be removed from, replaced in or added to a UEFI file volume.
   This includes PE files, PEIMs, CPU microcodes, CMSE/PSP, FSP/AGESA, EC and OptionROMs – but **SHOULD NOT** include encryption keys or source code references.
   Each component may be provided as a precompiled binary by a *component vendor* to a *firmware vendor*, or it may be built from an independent source code tree by the *firmware vendor*.
-* **Component SBoM**: an SBoM for a single component.
-* **Component Vendor**: a party responsible for directly supplying a *component* for use by a *firmware vendor* in a firmware image.
-* **Firmware**: a complete UEFI firmware image, which typically comprises multiple *components*.
-* **Firmware SBoM**: an SBoM that represents all the *components* present in a single *firmware* and which could be generated in full or in part by combining *component* SBoMs.
-* **Firmware Vendor**: a party responsible for building firmware, for use by the *platform vendor*.
-* **Platform SBoM**: an SBoM that represents all the components in use on a real-world device.
-  May be equivalent to the firmware SBoM for a single system firmware deployed on the device, or may be a superset of it that includes metadata for multiple firmwares, for e.g. separate firmwares for the system and for an attached touchpad or camera device.
-* **Platform Vendor**: the party responsible for supplying a combined platform firmware image, typically comprising multiple firmwares, for use on end-user hardware.
+- **Component SBoM**: an SBoM for a single *component*.
+- **Component Vendor**: a party responsible for directly supplying a *component* for use by a *firmware vendor* in a firmware image.
+- **Firmware**: a complete UEFI firmware image, which typically comprises multiple *components*.
+- **Firmware SBoM**: an SBoM that represents all the *components* present in a single *firmware* and which could be generated in full or in part by combining *component* SBoMs.
+- **Firmware Vendor**: a party responsible for building *firmware*, for use by the *platform vendor*.
+- **Platform SBoM**: an SBoM that represents all the components in use on a real-world device.
+  May be equivalent to the *firmware SBoM* for a single system firmware deployed on the device, or may be a superset of it that includes metadata for multiple firmwares, for e.g. separate firmwares for the system and for an attached touchpad or camera device.
+- **Platform Vendor**: the party responsible for supplying a combined platform firmware image, typically comprising multiple firmwares, for use on end-user hardware.
 
 Introduction
 ************
@@ -44,10 +45,10 @@ For US companies, `Executive Order 14028 <https://www.nist.gov/itl/executive-ord
 It has traditionally been difficult to build firmware or platform SBoMs for systems using Tianocore/EDK2, or other implementation of the UEFI Specification, due to the involvement of three separate entities: the *Firmware Vendor* that produces the bulk of the source code, the ODM (Original Design Manufacturer) that compiles it with other additional code and adds additional binaries, and the OEM (Original Equipment Manufacturer) that may add their own extensions and then distributes the firmware.
 Most consumer devices using UEFI firmware also have many other firmware blobs of firmware supplied for factory burn-in, e.g. fingerprint reader, SD card reader, touchpad, PCI retimer, Synaptics MST, Intel Thunderbolt, and many more – and these might not have any communication channel to the system firmware at all.
 
-End-users do not buy “UEFI Firmware” and any deliverable built for UEFI firmware will normally be included in a larger OEM per-device *platform* SBoM.
+End-users do not buy “UEFI Firmware” and any deliverable built for UEFI firmware will normally be included in a larger OEM per-device *platform SBoM*.
 At the same time, we also need to provide access to the runtime “current firmware SBoM” so that we can use newer technologies such as `VEX <https://www.cisa.gov/sites/default/files/publications/VEX_Use_Cases_Document_508c.pdf>`_ to automatically identify systems that require security fixes.
 
-This document explains why SBoM metadata for all constituent *components* should be embedded in all *firmwares*, what should be included in it, **and** how it should be used as part of a larger platform SBoM that is useful to end-users.
+This document explains why SBoM metadata for all constituent *components* should be embedded in all *firmwares*, what should be included in it, **and** how it should be used as part of a larger *platform SBoM* that is useful to end-users.
 
 Embedding the SBoM
 ******************
@@ -60,16 +61,16 @@ Benefits of Embedding
 Traditionally there has been pressure to keep firmware images as small as possible to minimize SPI storage space and to minimize the cost of the *Hardware Bill of Materials*.
 While this is a noble aim, sacrificing a few hundred bytes of space for an embedded SBoM has several advantages:
 
-* The SBoM does not need to be verified against a binary deliverable, it can be assumed to be “part of” the existing source artefact itself.
-* Vendors at any link in the supply chain that don’t care about or understand SBoMs do not “strip” the SBoM information.
-* The *component and/or firmware SBoMs* from all the factory burn-in *firmware* images can be combined into one generated public *platform SBoM* that can be used for contractual or compliance reasons, without the need to request *component* or *firmware* SBoMs separately from each *component vendor* and *firmware vendor*.
-* Build-time automated embedding as part of CI/CD is recommended as part of the `US Cyber Trust Mark <https://www.osfc.io/2023/talks/us-cyber-trust-mark-is-your-firmware-ready/>`_ initiative.
-* Some firmware build systems require the firmware blob and definition files to be put in a predefined place in order to generate a new firmware binary, which means non-embedded SBoM metadata may get out-of-sync with the blob.
+- The SBoM does not need to be verified against a binary deliverable, it can be assumed to be “part of” the existing source artefact itself.
+- Vendors at any link in the supply chain that don’t care about or understand SBoMs do not “strip” the SBoM information.
+- The *component SBoMs and/or firmware SBoMs* from all the factory burn-in *firmware* images can be combined into one generated public *platform SBoM* that can be used for contractual or compliance reasons, without the need to request *component* or *firmware* SBoMs separately from each *component vendor* and *firmware vendor*.
+- Build-time automated embedding as part of CI/CD is recommended as part of the `US Cyber Trust Mark <https://www.osfc.io/2023/talks/us-cyber-trust-mark-is-your-firmware-ready/>`_ initiative.
+- Some firmware build systems require the firmware blob and definition files to be put in a predefined place in order to generate a new firmware binary, which means non-embedded SBoM metadata may get out-of-sync with the blob.
 
 If the SBoM is not embedded as a build artifact, a firmware engineer could rebuild the firmware capsule and forget to also regenerate or replace the SBoM in the new archive because it is a separate process that is hard to verify was done.
 If the SBoM is part of the image itself and *automatically constructed* as part of the deliverable then it is impossible to forget.
 Sending the capsule or manually dumped ROM image to a QA engineer means they can know with almost complete certainty what blobs the image was built with.
-Embedding the SBoM makes doing the "right" thing easy and doing the "wrong" thing very hard.
+Embedding the SBoM makes doing the "right" thing easy and doing the "wrong" thing hard.
 
 
 General Best Practices
@@ -81,9 +82,9 @@ They **MAY** also create a more detailed detached SBoM (for instance referencing
 *Firmware vendors* **MUST** ensure embedded SBoM metadata is included for each PE binary and all additional *components* included in the *firmware* formatted as described below.
 This **MUST** be done by:
 
-* Including the SBoM for each *component* in a “defragmented” *firmware SBoM* created at build time, **OR**
-* Ensuring that each *component* contains embedded SBoM metadata, **OR**
-* Doing both of the above.
+- Including the SBoM for each *component* in a “defragmented” *firmware SBoM* created at build time, **OR**
+- Ensuring that each *component* contains embedded SBoM metadata, **OR**
+- Doing both of the above.
 
 *Component* and *firmware* SBoMs **SHOULD NOT** reference any code or blobs which are not actually present, or which have been disabled in the system.
 
@@ -105,7 +106,7 @@ If for any reason this is not done automatically at compile time, the *firmware 
 For Tianocore/EDK2 firmware, there is an `example <https://github.com/hughsie/uswid-uefi-example>`_ showing how to supplement the information in the ``.inf`` file with per-component and per-platform overrides.
 More specific recommendations on how to include additional artifacts into the ``.sbom`` section have not been made as this will be heavily influenced by the existing proprietary build system and tools used to build the image.
 
-In the case where there is no natural place to store the *component SBoM*, it **SHOULD** be included as a per-volume metadata section. In this case it **MUST** include a uSWID magic header, as described in “Binaries that are not Portable Executables (PE)” below.
+In the case where there is no natural place to store the *component SBoM*, it **SHOULD** be included as a per-volume metadata section. In this case it **MUST** include a uSWID magic header, as described in `Components that are not Portable Executables (PE)`_ below.
 
 Precompiled Portable Executable (PE) Binaries
 ---------------------------------------------
@@ -139,7 +140,7 @@ The 25 byte uSWID header is listed below:
                   0x01: zlib
                   0x02: lzma
 
-The header length **MAY** be increased for alignment reasons (e.g. to 0x100 bytes), and in this case the additional header padding **MUST** be NUL bytes.
+The header length **MAY** be increased for alignment reasons (e.g. to 0x100 bytes), and in this case the additional header padding **MUST** be ``NUL`` bytes.
 
 The uSWID payload **SHOULD** be compressed with either zlib or LZMA, and a firmware image containing the binary **SHOULD** `pass validation <https://github.com/hughsie/python-uswid/pull/58>`_ using ``uswid``, for example:
 
@@ -164,10 +165,10 @@ A firmware image can contain a “defragmented” top-level *firmware SBoM* with
 
 If the *firmware SBoM* is present:
 
-* It **MUST** contain all *component SBoMs* present in the image.
+- It **MUST** contain all *component SBoMs* present in the image.
   This requirement is to ensure that tools do not need to combine and deduplicate *component SBoMs* with the *firmware SBoM* to provide all available information.
-* It **SHOULD** be compressed.
-* The components **MAY** also have *component SBoMs* as described in this document, to allow them to be analyzed in isolation.
+- It **SHOULD** be compressed.
+- The components **MAY** also have *component SBoMs* as described in this document, to allow them to be analyzed in isolation.
 
 Data Provided by the SBoM
 *************************
@@ -178,10 +179,10 @@ In this section we use the term “SBoM component” to refer to a single item w
 
 Each SBoM component **SHOULD** describe either:
 
-* A single *component*, as defined in the `glossary`_, or
-* An individually identifiable part of a *component* which has security and/or licensing implications in its own right, for example an image loading library used by a PE binary, or
-* Something which has security and/or licensing implications and which was used to produce a *component* but which is not present in the *component* itself, for example a compiler used to produce a PE binary, or
-* Any kind of defined superset collections such as optional features or “value add” options that may be matched from a VEX file (see below).
+- A single *component*, as defined in the `glossary`_, or
+- An individually identifiable part of a *component* which has security and/or licensing implications in its own right, for example an image loading library used by a PE binary, or
+- Something which has security and/or licensing implications and which was used to produce a *component* but which is not present in the *component* itself, for example a compiler used to produce a PE binary, or
+- Any kind of defined superset collections such as optional features or “value add” options that may be matched from a VEX file (see below).
 
 Each *component* **MUST** be represented by an SBoM component in its *component SBoM*, or the *firmware SBoM* if the component does not have its own SBoM (see the `Embedding the SBoM`_ section above for possible scenarios).
 Libraries, compilers etc. **SHOULD** be represented by SBoM components (see the `Component Relationships`_ section below for more on this).
@@ -194,20 +195,20 @@ Required Attributes
 
 Each tag:
 
-* **MUST** have an identifier in the form of a GUID.
+- **MUST** have an identifier in the form of a GUID.
   See the `Identifier`_ section below for more details.
-* **MUST** have a non-zero length descriptive name, e.g. “CryptoDxe”, and **SHOULD NOT** include a file extension as this is already included in the SWID payload section.
-* **MUST** have at least one entity entry and **SHOULD** have more than one, if more than one legal entity is involved in its creation, maintenance and/or distribution.
-   * One entity **MUST** have the tag-creator role.
-   * One entity **MUST** have the software-creator role, and it **MAY** be the same entity as the one specified in tag-creator.
+- **MUST** have a non-zero length descriptive name, e.g. “CryptoDxe”, and **SHOULD NOT** include a file extension as this is already included in the SWID payload section.
+- **MUST** have at least one entity entry and **SHOULD** have more than one, if more than one legal entity is involved in its creation, maintenance and/or distribution.
+   - One entity **MUST** have the tag-creator role.
+   - One entity **MUST** have the software-creator role, and it **MAY** be the same entity as the one specified in tag-creator.
      See the `Vendor Entity`_ section below for details.
-   * In specifying entity roles, vendors **SHOULD** be careful not to make business relationships public that are not already in the public domain.
-* **MUST** have a version, which **SHOULD** be a semantic version like ``1.2.3``.
-* **MUST** have a file hash that is generated from all the source files, if it is a binary built from source code or other constituent parts. This **MUST** be either a SHA-1 or SHA-256 hash.
-   * This is what uSWID calls a “colloquial version”
-* **SHOULD** have a revision control tree hash which **MUST** be either a SHA-1 or SHA-256 hash (e.g. the output from ``git describe``), if it is a binary built from source code under revision control.
-   * This is what uSWID calls an “edition”
-* **MAY** or **MUST** include one or more link entries expressing relationship(s) to another SBoM component. See the `Component Relationships`_ section below for details, including when link entries are **REQUIRED** and when they are **OPTIONAL**.
+   - In specifying entity roles, vendors **SHOULD** be careful not to make business relationships public that are not already in the public domain.
+- **MUST** have a version, which **SHOULD** be a semantic version like ``1.2.3``.
+- **MUST** have a file hash that is generated from all the source files, if it is a binary built from source code or other constituent parts. This **MUST** be either a SHA-1 or SHA-256 hash.
+   - This is what uSWID calls a “colloquial version”
+- **SHOULD** have a revision control tree hash which **MUST** be either a SHA-1 or SHA-256 hash (e.g. the output from ``git describe``), if it is a binary built from source code under revision control.
+   - This is what uSWID calls an “edition”
+- **MAY** or **MUST** include one or more link entries expressing relationship(s) to another SBoM component. See the `Component Relationships`_ section below for details, including when link entries are **REQUIRED** and when they are **OPTIONAL**.
 
 Identifier
 ----------
@@ -219,9 +220,9 @@ Using a GUID is deliberate because it can obscure internal references and it can
 
 Example component IDs could include:
 
-* ``swid:intel-microcode-706E5-80``
-* ``swid:gcc``
-* ``f43cae5a-baea-5023-bc90-3a83cd4785cc which is UUID(DNS, “gcc”)``
+- ``swid:intel-microcode-706E5-80``
+- ``swid:gcc``
+- ``f43cae5a-baea-5023-bc90-3a83cd4785cc which is UUID(DNS, “gcc”)``
 
 Some of this information is already present in projects such as EDK2 in the various ``.inf`` files.
 
@@ -256,19 +257,19 @@ SBoM component links are used to supply additional information about how compone
 They also include any required licensing information, statically linked libraries and links to additional resources.
 SBoM components **MAY** use multiple links, even of the same relationship type.
 
-* SBoM components representing open source software **MUST** include one or more license link(s) indicating all licenses that apply.
-   * The URL for each license link **MUST** be the SPDX license URL, e.g: ``https://spdx.org/licenses/LGPL-2.1-or-later.html``
-   * The ``license`` relationship type **MUST** be used.
-   * All open source code **SHOULD** be identified with its own SBoM component to allow verification of license compliance.
-* SBoM components representing non-open source software **SHOULD** include one or more license link(s) indicating all licenses that apply.
-   * The URL for each license link **MUST** be a public webpage with the full text of the proprietary license.
-   * The ``license`` relationship type **MUST** be used.
-* SBoM components representing compiled binaries **SHOULD** reference SBoM components representing the compiler and linker used to build the binary where possible.
-   * The ``see-also`` relationship type **MUST** be used, and the ``swid``-prefixed URL **MUST** be an existing component identifier defined in the component or firmware SBoM.
-* SBoM components representing compiled binaries **SHOULD** reference SBoM components representing libraries that are linked into the binary and that may be referenced in VEX documents (see below).
-   * The ``requires`` relationship type **MUST** be used, and the ``swid``-prefixed URL **MUST** point to an existing component in the SBoM.
-* SBoM components **MAY** include a link specifying the source URL where they can be downloaded. e.g. ``https://github.com/intel/FSP/AmberLakeFspBinPkg``
-   * The ``installationmedia`` relationship type **MUST** be used.
+- SBoM components representing open source software **MUST** include one or more license link(s) indicating all licenses that apply.
+   - The URL for each license link **MUST** be the SPDX license URL, e.g: ``https://spdx.org/licenses/LGPL-2.1-or-later.html``
+   - The ``license`` relationship type **MUST** be used.
+   - All open source code **SHOULD** be identified with its own SBoM component to allow verification of license compliance.
+- SBoM components representing non-open source software **SHOULD** include one or more license link(s) indicating all licenses that apply.
+   - The URL for each license link **MUST** be a public webpage with the full text of the proprietary license.
+   - The ``license`` relationship type **MUST** be used.
+- SBoM components representing compiled binaries **SHOULD** reference SBoM components representing the compiler and linker used to build the binary where possible.
+   - The ``see-also`` relationship type **MUST** be used, and the ``swid``-prefixed URL **MUST** be an existing component identifier defined in the component or firmware SBoM.
+- SBoM components representing compiled binaries **SHOULD** reference SBoM components representing libraries that are linked into the binary and that may be referenced in VEX documents (see below).
+   - The ``requires`` relationship type **MUST** be used, and the ``swid``-prefixed URL **MUST** point to an existing component in the SBoM.
+- SBoM components **MAY** include a link specifying the source URL where they can be downloaded. e.g. ``https://github.com/intel/FSP/AmberLakeFspBinPkg``
+   - The ``installationmedia`` relationship type **MUST** be used.
 
 SBoM Information Flow
 *********************
@@ -291,17 +292,17 @@ Using VEX Rules
 Vulnerability Exploitability eXchange (VEX) allows a *component vendor* to assert the status of a specific vulnerability in a particular firmware.
 VEX can have any of the following “status” values for each component:
 
-* **Not affected**: No remediation is required regarding this vulnerability.
-* **Affected**: Actions are recommended to remediate or address this vulnerability.
-* **Fixed**: Represents that these product versions contain a fix for the vulnerability.
-* **Under Investigation**: It is not yet known whether these product versions are affected by the vulnerability.
+- **Not affected**: No remediation is required regarding this vulnerability.
+- **Affected**: Actions are recommended to remediate or address this vulnerability.
+- **Fixed**: Represents that these product versions contain a fix for the vulnerability.
+- **Under Investigation**: It is not yet known whether these product versions are affected by the vulnerability.
 
 Only the entity with the source code tree and the config files used to build it (usually the IBV or ODM) has all the information required to know whether a given EFI binary is affected by a specific vulnerability.
 
 If our aim is to find out if a specific firmware is vulnerable to a specific security issue, there are only three ways to solve this without access to a complete SBoM:
-* The end-user asks the *component vendor*, who finds the firmware version, checks out the source code for that revision, then looks for affected code, and replies with the answer.
-* The *component vendor* proactively passes detailed vulnerability status and remediation info to the immediate downstream supply chain partner, who then in turn proactively passes this down to each customer.
-* The *component vendor* shares the code and the config to the customer and assumes the customer can work it out themselves.
+- The end-user asks the *component vendor*, who finds the firmware version, checks out the source code for that revision, then looks for affected code, and replies with the answer.
+- The *component vendor* proactively passes detailed vulnerability status and remediation info to the immediate downstream supply chain partner, who then in turn proactively passes this down to each customer.
+- The *component vendor* shares the code and the config to the customer and assumes the customer can work it out themselves.
 
 We consider these ways to be clearly unsatisfactory.
 Therefore, both *component* and *platform vendors* **SHOULD** upload the SBoM to a trusted neutral entity, allowing multiple customers and end-users to query the information.
@@ -313,8 +314,8 @@ Where a semantic version is required it **MAY** also be specified.
 
 For example:
 
-* ``pkg:dca533ab-2c1f-4327-9b2b-09ac19533404``
-* ``pkg:dca533ab-2c1f-4327-9b2b-09ac19533404@15.35.2039``
+- ``pkg:dca533ab-2c1f-4327-9b2b-09ac19533404``
+- ``pkg:dca533ab-2c1f-4327-9b2b-09ac19533404@15.35.2039``
 
 Further details about using Vulnerability Exploitability eXchange (VEX) standards such as OpenVEX with embedded firmware SBoMs will be provided in the future.
 
@@ -331,8 +332,9 @@ External SBoM Metadata
 ======================
 
 This document strongly encourages vendors to embed the SBoM metadata into the respective binaries, but there are two situations where externally referenced SBoM metadata would be allowed:
-* Where the binary is loaded onto critically space-constrained devices, for example microcode that is loaded into the processor itself.
-* Where only later newer versions of the component have embedded SBoM metadata, and backwards compatibility is required with older revisions.
+
+- Where the binary is loaded onto critically space-constrained devices, for example microcode that is loaded into the processor itself.
+- Where only later newer versions of the component have embedded SBoM metadata, and backwards compatibility is required with older revisions.
 
 In these cases, the *component vendor* **MUST** provide “detached metadata” from the same source (or in the same archive file) as is used to distribute the immutable blob.
 
@@ -373,6 +375,5 @@ When firmware is uploaded to the LVFS it automatically extracts all available SB
 The LVFS **MAY** allow vendors to upload firmware or platform SBoMs without uploading the firmware binary.
 Other services like Windows Update may offer this service in the future.
 
-
 The VEX "trusted neutral entity" **MAY** also be the LVFS, even for firmware updates not distributed by the LVFS.
-Uploading VEX data requires vendors to register  `_for a LVFS vendor account <https://lvfs.readthedocs.io/en/latest/apply.html>`_ which is available at no cost.
+Uploading VEX data requires vendors to register  `for a LVFS vendor account <https://lvfs.readthedocs.io/en/latest/apply.html>`_ which is available at no cost.
