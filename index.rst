@@ -192,7 +192,6 @@ Thus, a *component SBoM* or *firmware SBoM* **MUST** contain at least one tag, a
 Required Attributes
 ===================
 
-
 Each tag:
 
 - **MUST** have an identifier in the form of a GUID.
@@ -300,16 +299,17 @@ VEX can have any of the following “status” values for each component:
 Only the entity with the source code tree and the config files used to build it (usually the IBV or ODM) has all the information required to know whether a given EFI binary is affected by a specific vulnerability.
 
 If our aim is to find out if a specific firmware is vulnerable to a specific security issue, there are only three ways to solve this without access to a complete SBoM:
+
 - The end-user asks the *component vendor*, who finds the firmware version, checks out the source code for that revision, then looks for affected code, and replies with the answer.
 - The *component vendor* proactively passes detailed vulnerability status and remediation info to the immediate downstream supply chain partner, who then in turn proactively passes this down to each customer.
 - The *component vendor* shares the code and the config to the customer and assumes the customer can work it out themselves.
 
 We consider these ways to be clearly unsatisfactory.
-Therefore, both *component* and *platform vendors* **SHOULD** upload the SBoM to a trusted neutral entity, allowing multiple customers and end-users to query the information.
+Therefore, both *component vendors* and *platform vendors* **SHOULD** upload the SBoM to a trusted neutral entity, allowing multiple customers and end-users to query the information.
 The neutral entity **MAY** also process additional trusted VEX data directly from *component vendors*, which allows *firmware* to automatically be marked as *affected* or *not affected* without direct involvement of the *firmware vendor*.
 
 Vendors writing VEX rules MUST use the same identifier as used in the SBoM.
-VEX product IDs are specified using PURL, and the GUID **MUST** be used as the component name.
+VEX product IDs are specified using `PURL <https://en.wikipedia.org/wiki/Persistent_uniform_resource_locator>`_, and the GUID **MUST** be used as the component name.
 Where a semantic version is required it **MAY** also be specified.
 
 For example:
@@ -348,7 +348,7 @@ Wasted Space Concerns
 Some vendors have expressed concerns about “wasted” space from including the SBoM data in the binary image.
 For source components such as CPU microcode, a single component *identity* and vendor *entity* for a single component would use an additional ~350 bytes (zlib compressed coSWID), compared to 48kB for the average EFI binary and 25kb for a typical vendor BGRT “splash” logo.
 
-The ``uswid`` command can automatically `generate <https://github.com/hughsie/python-uswid#generating-test-data>`_ a complete “worst case” platform SBoM with 1000 plausible components.
+The ``uswid`` command can automatically `generate <https://github.com/hughsie/python-uswid#generating-test-data>`_ a complete “worst case” platform SBoM with 1,000 plausible components.
 This SBoM requires an additional 140kB of SPI flash space (uncompressed coSWID), or 60kB when compressed with LZMA.
 For reference, the average free space in an Intel Flash ROM BIOS partition is 5.26Mb, where “free space” is defined as a greater than 100KiB stream of consecutive 0xFF’s after the first detected EFI file volume.
 Adding the SBoM as embedded metadata would use 1.1% of the available free space.
