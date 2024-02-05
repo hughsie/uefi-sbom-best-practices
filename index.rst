@@ -4,7 +4,9 @@
 UEFI Firmware SBoM Recommendations and Best Practices
 =====================================================
 
-Version 0.9
+Version: 0.9
+
+Date: February 4, 2023
 
 Disclaimers, Notices, And License Terms
 ***************************************
@@ -48,6 +50,12 @@ SBOM Sub Team Active Participants:
 - Vincent Zimmer (Intel)
 
 
+Table of Contents
+*****************
+
+.. contents::
+
+
 Preface
 *******
 
@@ -56,7 +64,6 @@ The purpose of this document is to present a set of guidelines and best practice
 **Note:** This is **NOT** a specification but is intended to provide guidance to UEFI members, and others, on how to implement SBoM data for firmware. The keywords "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**",  "**MAY**", and "**OPTIONAL**" in this document should be interpreted as described in `RFC 2119 <https://www.rfc-editor.org/rfc/rfc2119>`_ but are used here only for emphasis, not as a normative specification.
 
 Feedback may be addressed to the authors via `UEFI admin <mailto:admin@uefi.org>`_.
-
 
 Glossary
 ********
@@ -80,7 +87,6 @@ This is because those entities may, at any given moment and in any given commerc
 - **Platform SBoM**: an SBoM that represents all the components in use on a real-world device.
   This may be equivalent to the *firmware SBoM* for single system firmware deployed on a device, or be a superset that includes metadata for multiple firmware (e.g. separate firmware for the system and for an attached touchpad or camera device).
 - **Platform Vendor**: the party responsible for supplying a combined platform firmware image, typically comprising multiple firmware, for use on end-user hardware.
-
 
 Introduction
 ************
