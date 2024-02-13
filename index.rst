@@ -77,7 +77,7 @@ This is because those entities may, at any given moment and in any given commerc
 - **SBoM**: Software Bill of Materials.
   A formal document which can be used to articulate what components are contained within a binary deliverable, and who is responsible for each part.
 - **Component**: any identifiable, discrete element of a UEFI firmware, including but not limited to any item that can be removed from, replaced in or added to a UEFI file volume.
-  This includes PE files, PEIMs, CPU microcodes, CMSE/PSP, FSP/AGESA, EC and OptionROMs – but **SHOULD NOT** include encryption keys or source code references.
+  This includes, but is not limited to, PE files, PEIMs, CPU microcodes, CMSE/PSP, FSP/AGESA, EC and OptionROMs – but **SHOULD NOT** include encryption keys or source code references.
   Each component may be provided as a precompiled binary by a *component vendor* to a *firmware vendor*, or it may be built from an independent source code tree by the *firmware vendor*.
 - **Component SBoM**: an SBoM for a single *component*.
 - **Component Vendor**: a party responsible for directly supplying a *component* for use by a *firmware vendor* in a firmware image.
