@@ -87,6 +87,7 @@ This is because those entities may, at any given moment and in any given commerc
 - **Platform SBoM**: an SBoM that represents all the components in use on a real-world device.
   This may be equivalent to the *firmware SBoM* for single system firmware deployed on a device, or be a superset that includes metadata for multiple firmware (e.g. separate firmware for the system and for an attached touchpad or camera device).
 - **Platform Vendor**: the party responsible for supplying a combined platform firmware image, typically comprising multiple firmware, for use on end-user hardware.
+- **Source Code**: Text written in a program language (for example, C, assembly or Rust) that is compiled into binary object files and is not included verbatim in the firmware image.
 
 Introduction
 ************
@@ -94,7 +95,7 @@ Introduction
 Due to the increasing number of high-profile supply chain attacks, it has become more important to record information about critical software such as system and peripheral firmware.
 For US companies, `Executive Order 14028 <https://www.nist.gov/itl/executive-order-14028-improving-nations-cybersecurity>`_ “Improving the Nation's Cybersecurity” and the `Cyber Trust Mark <https://www.fcc.gov/cybersecurity-certification-mark>`_ now make providing an SBoM with this information a legal obligation for many companies.
 
-It has traditionally been difficult to build firmware or platform SBoMs for systems using Tianocore/EDK2, or other implementations of the UEFI Specification, due to the involvement of three separate entities: the *Firmware Vendor* that produces the bulk of the source code, the ODM (Original Design Manufacturer) that compiles it with other additional code and adds additional binaries, and the OEM (Original Equipment Manufacturer) that may add their own extensions and then distributes the firmware.
+It has traditionally been difficult to build firmware or platform SBoMs for systems using Tianocore/EDK2, or other implementations of the UEFI Specification, due to the involvement of three separate entities: the *Firmware Vendor* that produces the bulk of the *source code*, the ODM (Original Design Manufacturer) that compiles it with other additional code and adds additional binaries, and the OEM (Original Equipment Manufacturer) that may add their own extensions and then distributes the firmware.
 Most consumer devices using UEFI firmware also have many other firmware blobs of firmware supplied for factory burn-in, e.g. fingerprint reader, SD card reader, touchpad, PCI retimer, Synaptics MST, Intel Thunderbolt, and many more – and these might not have any communication channel to the system firmware at all.
 
 End-users do not buy “UEFI Firmware” and any deliverable built for UEFI firmware will normally be included in a larger OEM per-device *platform SBoM*.
@@ -131,7 +132,7 @@ General Best Practices
 ======================
 
 All *component vendors* **SHOULD** embed an SBoM in the component image, formatted as described below.
-They **MAY** also create a more detailed detached SBoM (for instance referencing internal issues or source code locations) that **MAY** be provided to the *firmware vendor* under NDA.
+They **MAY** also create a more detailed detached SBoM (for instance referencing internal issues or *source code* filenames) that **MAY** be provided to the *firmware vendor* under NDA.
 
 *Firmware vendors* **MUST** ensure embedded SBoM metadata is included for each PE binary and all additional *components* included in the *firmware* formatted as described below.
 This **MUST** be done by:
@@ -153,7 +154,7 @@ This format was chosen due to the small compiled size of data compared to `SPDX 
 Built Portable Executable (PE) Binaries
 ---------------------------------------
 
-Most *components* in a typical *firmware* are compiled from source code and linked into PE binaries.
+Most *components* in a typical *firmware* are compiled from *source code* and linked into PE binaries.
 These can be considered components whose vendor is the *firmware vendor*.
 
 The *firmware vendor* **SHOULD** ensure that the SBoM metadata is automatically built and verified at compile time and then added to the PE binary (in the ``.sbom`` COFF section), placed directly in the “defragmented” *firmware SBoM* (see below), or both.
@@ -168,7 +169,7 @@ In the case where there is no natural place to store the *component SBoM*, it **
 Precompiled Portable Executable (PE) Binaries
 ---------------------------------------------
 
-*Firmware vendors* do not have to compile all the PE binaries in the EFI volume from source code.
+*Firmware vendors* do not have to compile all the PE binaries in the EFI volume from *source code*.
 They may get pre-compiled and pre-signed binaries from third-party *component vendors*.
 *Component vendors* **SHOULD** include the coSWID SBoM metadata for these components in a ``.sbom`` `COFF <https://learn.microsoft.com/en-us/windows/win32/debug/pe-format>`_ section which can be easily included at link time.
 These binaries **MUST NOT** use the magic header of uSWID (described below) as the PE header can be parsed for the correct offset of the section.
@@ -264,9 +265,9 @@ Each tag:
      See the `Vendor Entity`_ section below for details.
    - In specifying entity roles, vendors **SHOULD** be careful not to make business relationships public that are not already in the public domain.
 - **MUST** have a version, which **SHOULD** be a semantic version like ``1.2.3``.
-- **MUST** have a file hash that is generated from all the source files, if it is a binary built from source code or other constituent parts. This **MUST** be either a SHA-1 or SHA-256 hash.
+- **MUST** have a file hash that is generated from all the source files, if it is a binary built from *source code* or other constituent parts. This **MUST** be either a SHA-1 or SHA-256 hash.
    - This is what uSWID calls a “colloquial version.”
-- **SHOULD** have a revision control tree hash which **MUST** be either a SHA-1 or SHA-256 hash (e.g. the output from ``git describe``), if it is a binary built from source code under revision control.
+- **SHOULD** have a revision control tree hash which **MUST** be either a SHA-1 or SHA-256 hash (e.g. the output from ``git describe``), if it is a binary built from *source code* under revision control.
    - This is what uSWID calls an “edition.”
 - **MAY** or **MUST** include one or more link entries expressing relationship(s) to another SBoM component. See the `Component Relationships`_ section below for details, including when link entries are **REQUIRED** and when they are **OPTIONAL**.
 
@@ -363,11 +364,11 @@ VEX can have any of the following “status” values for each component:
 - **Fixed**: Represents that these product versions contain a fix for the vulnerability.
 - **Under Investigation**: It is not yet known whether these product versions are affected by the vulnerability.
 
-Only the entity with the source code tree and the config files used to build it (usually the IBV or ODM) has all the information required to know whether a given EFI binary is affected by a specific vulnerability.
+Only the entity with the *source code* tree and the config files used to build it (usually the IBV or ODM) has all the information required to know whether a given EFI binary is affected by a specific vulnerability.
 
 If our aim is to find out if a specific firmware is vulnerable to a specific security issue, there are only three ways to solve this without access to a complete SBoM:
 
-- The end-user asks the *component vendor*, who finds the firmware version, checks out the source code for that revision, then looks for affected code, and replies with the answer.
+- The end-user asks the *component vendor*, who finds the firmware version, checks out the *source code* for that revision, then looks for affected code, and replies with the answer.
 - The *component vendor* proactively passes detailed vulnerability status and remediation info to the immediate downstream supply chain partner, who then in turn proactively passes this down to each customer.
 - The *component vendor* shares the code and the config to the customer and assumes the customer can work it out themselves.
 
