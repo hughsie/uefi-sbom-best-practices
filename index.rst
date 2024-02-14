@@ -235,7 +235,7 @@ Data Provided by the SBoM
 
 The purpose of an SBoM is to tell the end-user what components make up the software deliverable, and to give them information on where it was retrieved from or built. The questions end-users need to be able to answer are “what version of OpenSSL is included, and where did it come from” and “do I trust all the companies contributing code and binaries to this image”. Answering the *what* and *who* in a standardized way also allows us to use other specifications such as VEX.
 
-In this section we use the term “SBoM component” to refer to a single item within an SBoM (in a coSWID SBoM, this is a single tag).
+In this section we use the term “SBoM component” to refer to a single ingredient within an SBoM (in a coSWID SBoM, this is a single tag).
 
 Each SBoM component **SHOULD** describe either:
 
