@@ -242,11 +242,10 @@ Each SBoM component **SHOULD** describe either:
 - A single *component*, as defined in the `glossary`_, or
 - An individually identifiable part of a *component* that has security and/or licensing implications, for example an image loading library used by a PE binary, or
 - Something that has security and/or licensing implications and was used to produce a *component,* but is not present in the *component* itself, for example a compiler used to produce a PE binary, or
-- Any kind of defined superset collections such as optional features or “value add” options that may be matched from a VEX file (see below).
+- Any kind of defined logical component, for example “optional features” or “value add” options that may be matched from a VEX file (see below).
 
 Each *component* **MUST** be represented by an SBoM component in its *component SBoM*, or the *firmware SBoM* if the component does not have its own SBoM (see the `Embedding the SBoM`_ section above for possible scenarios).
 Libraries, compilers etc. **SHOULD** be represented by SBoM components (see the `Component Relationships`_ section below for more on this).
-Defined superset collections **MAY** be represented as SBoM components.
 Thus, a *component SBoM* or *firmware SBoM* **MUST** contain at least one tag, and **MAY** contain more.
 
 
