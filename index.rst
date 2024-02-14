@@ -318,6 +318,7 @@ Component Relationships
 
 SBoM component links are used to supply additional information about how components relate to each other.
 They also include any required licensing information, statically linked libraries and links to additional resources.
+Libraries that may be matched from a VEX file (for instance, where a third-party library has previously security vulnerabilities) **SHOULD** be included as a component, but other internal libraries **MAY** be omitted.
 SBoM components **MAY** use multiple links, even of the same relationship type.
 
 - SBoM components representing open-source software **MUST** include one or more license link(s) indicating all licenses that apply.
