@@ -4,7 +4,7 @@
 UEFI Firmware SBoM Recommendations and Best Practices
 =====================================================
 
-Version: 0.9
+Version: 0.9 (**DRAFT**)
 
 Date: February 4, 2023
 
