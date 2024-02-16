@@ -274,6 +274,9 @@ Each tag:
    - This is what uSWID calls an “edition.”
 - **MAY** or **MUST** include one or more link entries expressing relationship(s) to another SBoM component. See the `Component Relationships`_ section below for details, including when link entries are **REQUIRED** and when they are **OPTIONAL**.
 
+The file hash **SHOULD** include the hashes of the *source code* files used to construct the binary, such as ``.c`` and ``.h`` files.
+Any library statically-linked with the PE binary **SHOULD** be included as an additional SBoM component.
+
 
 Identifier
 ----------
