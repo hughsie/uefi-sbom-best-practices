@@ -249,6 +249,10 @@ Each *component* **MUST** be represented by an SBoM component in its *component 
 Libraries, compilers etc. **SHOULD** be represented by SBoM components (see the `Component Relationships`_ section below for more on this).
 Thus, a *component SBoM* or *firmware SBoM* **MUST** contain at least one tag, and **MAY** contain more.
 
+For components or relationships that cannot currently be disclosed for legal reasons, vendors **MAY** use the literal text ``REDACTED`` in place of the correct string value.
+This is intended as a **temporary** measure while contracts or NDAs are renegotiated.
+Any SBoM components with ``REDACTED`` text **MAY** be marked as incomplete and **MUST** fail validation.
+
 
 Required Attributes
 ===================
