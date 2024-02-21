@@ -68,7 +68,7 @@ Feedback may be addressed to the authors via `UEFI admin <mailto:admin@uefi.org>
 Glossary
 ********
 
-This whitepaper assumes a working knowledge of terminology related to `UEFI <https://uefi.org/>`_ firmware, and of software concepts such as “libraries” and “compilers”.
+This document assumes a working knowledge of terminology related to `UEFI <https://uefi.org/>`_ firmware, and of software concepts such as “libraries” and “compilers”.
 The terms defined in this glossary may appear in italics as a reminder that they are being used as defined here.
 
 Readers may be expecting to see terms like “IBV” (Independent BIOS Vendor), “ODM” (Original Design Manufacturer), “IFV” (Independent Firmware Vendor) and “OEM” (Original Equipment Manufacturer), but this document mostly avoids those terms.
