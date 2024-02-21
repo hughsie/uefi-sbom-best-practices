@@ -438,6 +438,19 @@ Further details will be provided when the SBOM table has been implemented.
 
 If the platform allows direct access to the system SPI device, then the entire firmware image can be dumped to a local file and analyzed by tools such as ``uswid``.
 
+Converting the SBoM
+===================
+
+The embedded SBoM **SHOULD** be converted it into one or more SBoM export formats before publication.
+
+This can be achieved easily using tools such as ``uswid``.
+For example, this can be used to produce two JSON files in CycloneDX and SPDX formats from the platform image:
+
+::
+
+  $ uswid --load rom.bin --save cyclonedx-bom.json
+  $ uswid --load rom.bin --save spdx.json
+
 Signing the SBoM
 ================
 
