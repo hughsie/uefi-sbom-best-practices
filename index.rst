@@ -61,7 +61,11 @@ Preface
 
 The purpose of this document is to present a set of guidelines and best practices for vendors of UEFI firmware to provide Software Bill of Materials (SBoM) information to their clients and customers, to aid in vulnerability detection and license management. It is intended to provide information on how to meet developing SBoM standards by government bodies.
 
-**Note:** This is **NOT** a specification but is intended to provide guidance to UEFI members, and others, on how to implement SBoM data for firmware. The keywords "**MUST**", "**MUST NOT**", "**REQUIRED**", "**SHALL**", "**SHALL NOT**", "**SHOULD**", "**SHOULD NOT**", "**RECOMMENDED**",  "**MAY**", and "**OPTIONAL**" in this document should be interpreted as described in `RFC 2119 <https://www.rfc-editor.org/rfc/rfc2119>`_ but are used here only for emphasis, not as a normative specification.
+**Note:** This is **NOT** a specification but is intended to provide guidance to UEFI members, and others, on how to implement SBoM data for firmware.
+Thus, the following keywords are used here only for emphasis, not as normative language as specified in `RFC 2119 <https://www.rfc-editor.org/rfc/rfc2119>`_:
+
+- **MUST**: it is strongly recommended
+- **SHOULD**: it is recommended
 
 Feedback may be addressed to the authors via `UEFI admin <mailto:admin@uefi.org>`_.
 
