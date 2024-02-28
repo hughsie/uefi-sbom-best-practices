@@ -458,6 +458,7 @@ Signing the SBoM
 ================
 
 The embedded SBoM **MAY** be signed, and **MAY** also be included in the firmware checksum.
+If the firmware component is signed then the SBoM **SHOULD** be included in to the signature.
 The signing step is optional because a malicious silicon provider can typically do much worse things (e.g. adding or replacing a DXE binary) than modify the SBoM metadata.
 
 Using the LVFS
