@@ -138,7 +138,7 @@ General Best Practices
 All *component vendors* **SHOULD** embed an SBoM in the component image, formatted as described below.
 They **MAY** also create a more detailed detached SBoM (for instance referencing internal issues or *source code* filenames) that **MAY** be provided to the *firmware vendor* under NDA.
 
-*Firmware vendors* **MUST** ensure embedded SBoM metadata is included for each PE binary and all additional *components* included in the *firmware* formatted as described below.
+*Firmware vendors* **SHOULD** ensure embedded SBoM metadata is included for every PE binary and all additional *components* included in the *firmware* formatted as described below.
 This **MUST** be done by:
 
 - Including the SBoM for each *component* in a “defragmented” *firmware SBoM* created at build time, **OR**
